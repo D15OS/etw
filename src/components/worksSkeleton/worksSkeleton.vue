@@ -110,6 +110,7 @@ export default {
 	@keyframes loading {
 		to {
 			background-position-x: -20%;
+            background-color: orange;
 		}
 	}
 	
