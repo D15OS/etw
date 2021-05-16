@@ -46,7 +46,6 @@ export const apiResquest = (prams) => {
 			},
 			fail: (err) => {
 				reject(err);
-				console.log(err)
 				uni.hideLoading()
 			},
 			complete: () => {

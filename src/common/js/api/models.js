@@ -1,8 +1,9 @@
-/* model层 */
+/* model�*/
 import {
 	apiResquest
 } from "./request.js"
 
+// ��ȡ�û��б�
 export const getList = (query) => {
 	return apiResquest({
 		url: 'api/test',
@@ -12,6 +13,7 @@ export const getList = (query) => {
 		}
 	})
 }
+// ��ȡ�������û�
 export const getAuthorList = (query) => {
 	return apiResquest({
 		url: 'api/authorList',
@@ -21,6 +23,7 @@ export const getAuthorList = (query) => {
 		}
 	})
 }
+// ��ȡ��̬�б�
 export const getTrendsList = (query) => {
 	return apiResquest({
 		url: 'api/trendsList',
@@ -28,5 +31,16 @@ export const getTrendsList = (query) => {
 		query: {
 			...query
 		}
+	})
+}
+
+//��¼
+export const loginWechat = (query) => {
+	return apiResquest({
+		url: '###',
+		method: 'POST',
+		query: {
+			...query
+		},
 	})
 }
