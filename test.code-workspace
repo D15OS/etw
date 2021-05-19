@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\demo\\common"
+		},
+		{
+			"path": "..\\demo\\components"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "my-project"
+	}
+}
