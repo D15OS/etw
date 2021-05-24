@@ -3,25 +3,30 @@
 *@param {Object} 接口API的参数
 *@return {Promise} 请求到的数据
 **/
-export const apiResquest = (prams) => {
-	// 判断请求类型
-	let headerData = {
-		'content-type': 'application/json'
-	}
-
+export const apiResquest = (url,prams) => {
+	//请求头
+	let headerData = {}
+	//请求参数
 	let dataObj = null
-
-	if (prams.method === "GET") {
-		headerData = {
-			'content-type': 'application/json'
-		}
-	} else {
-		dataObj = {
-			'data': prams.query
-		}
+	// 判断请求类型
+	switch (prams.method) {
+		case "GET":
+			headerData = { 'Content-type': 'application/json' };
+			break;
+		case "POST":
+			headerData = { 'Content-type': 'application/x-www-form-urlencoded' };
+			dataObj = prams.query;
+			break;
+		case "PUT":
+			headerData = {};
+			break;
+		case "DELETE":
+			headerData = {};
+			break;
+		default:
+			break;
 	}
 	return new Promise((resolve, reject) => {
-		let url = prams.url;
 		return uni.request({
 			url: url,
 			data: dataObj,
@@ -29,10 +34,9 @@ export const apiResquest = (prams) => {
 			header: headerData,
 			success: (res) => {
 				uni.hideLoading()
-				//返回码
-				if (res.data.code !== '200') {
+				if (res.data.errorCode !== 200) {
 					uni.showToast({
-						title: '获取数据失败:' + res.data.msg,
+						title: '获取数据失败:' + res.data.errorMsg,
 						duration: 1000,
 						icon: "none"
 					})
@@ -41,8 +45,7 @@ export const apiResquest = (prams) => {
 				// setTimeout(function() {
 				// 	resolve(res.data);
 				// }, 2000)
-				resolve(res.data);
-				console.log(res.data)
+				resolve(res);
 			},
 			fail: (err) => {
 				reject(err);

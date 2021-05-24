@@ -1,12 +1,6 @@
 <template>
   <view class="editor-wrapper">
-    <editor
-      id="editor"
-      class="ql-container"
-      :placeholder="placeholder"
-      @statuschange="onStatusChange"
-      @ready="onEditorReady"
-    ></editor>
+    <input class="editor-title" type="text" placeholder="请输入标题" />
     <!-- 编辑器按钮 -->
     <view class="editor-group">
       <view @tap="format" class="editor-button-group">
@@ -47,23 +41,29 @@
         ></text>
       </view>
     </view>
+    <editor
+      id="editor"
+      class="editor-container"
+      :placeholder="placeholder"
+      @statuschange="onStatusChange"
+      @ready="onEditorReady"
+    ></editor>
     <button @click="getEditorContent">获取表单内容</button>
   </view>
 </template>
 
 <script>
 export default {
-  name: "testComponents",
+  name: "RichTextEditor",
   data() {
     return {
-      placeholder: "开始输入...",
+      placeholder: "请输入正文",
       formats: {},
     };
   },
   methods: {
     onEditorReady() {
-      this
-        .createSelectorQuery()
+      this.createSelectorQuery()
         .select("#editor")
         .context((res) => {
           this.editorCtx = res.context;
@@ -94,24 +94,31 @@ export default {
         count: 1,
         success: (res) => {
           // 上传图片
-          uni.uploadFile({
-            url: "",
-            fileType: "image",
-            filePath: res.tempFilePaths[0],
-            name: "file",
+          // uni.uploadFile({
+          //   url: "",
+          //   fileType: "image",
+          //   filePath: res.tempFilePaths[0],
+          //   name: "file",
 
-            success: (data) => {
-              console.log(data);
-              that.editorCtx.insertImage({
-                src: data,
-                alt: "图像",
-                success: function () {
-                  console.log("insert image success");
-                },
-              });
-            },
-            fail: (error) => {
-              console.log("上传错误：" + error);
+          //   success: (data) => {
+          //     console.log(data);
+          //     that.editorCtx.insertImage({
+          //       src: data,
+          //       alt: "图像",
+          //       success: function () {
+          //         console.log("insert image success");
+          //       },
+          //     });
+          //   },
+          //   fail: (error) => {
+          //     console.log("上传错误：" + error);
+          //   },
+          // });
+          that.editorCtx.insertImage({
+            src: res.tempFilePaths[0],
+            alt: "图像",
+            success: function () {
+              console.log("insert image success");
             },
           });
         },
@@ -133,27 +140,30 @@ export default {
 
 <style lang="scss">
 .editor-wrapper {
-  margin-top: 30rpx;
-  border-radius: 45rpx 45rpx 0 0;
-  height: calc(100vh - var(--window-top) - var(--status-bar-height) - 140px);
-  background-color: #e7e7e7;
-}
-.ql-container {
   background-color: white;
+}
+.editor-title {
+  padding: 24rpx 30rpx;
+  font-size: 48rpx;
+  height: 48rpx;
+}
+.editor-container {
   box-sizing: border-box;
-  padding: 12px 15px;
+  padding: 24rpx 30rpx;
   width: 100%;
   min-height: 30vh;
-  height: 100%;
-  font-size: 16px;
+  font-size: 32rpx;
   line-height: 1.5;
 }
 .editor-group {
+  background-color: white;
   padding: 15rpx;
+  border-top: 1rpx solid $uni-color-grey;
+  border-bottom: 1rpx solid $uni-color-grey;
 }
 .editor-button-group {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   text {
     margin: 0 4rpx;
     width: 60rpx;

@@ -57,24 +57,26 @@ export default {
 
 <style lang="scss" scoped>
 .slot-btn {
-	width: 200rpx;
-	height: 200rpx;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: rgb(244, 245, 246);
-	border-radius: 20rpx;
+  width: 200rpx;
+  height: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(244, 245, 246);
+  border-radius: 20rpx;
+  margin: 8rpx;
 }
 .slot-btn__hover {
-	background-color: rgb(235, 236, 238);
+  background-color: rgb(235, 236, 238);
 }
 .upload-btn {
-	width: 200rpx;
-	height: 200rpx;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: rgb(244, 245, 246);
+  width: 200rpx;
+  height: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(244, 245, 246);
+  margin: 8rpx;
 }
 .trendFrom {
 	width: 100vw;

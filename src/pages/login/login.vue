@@ -1,49 +1,53 @@
 <template>
-	<view><button @click="xcxWxLogin()" type="default">登录</button></view>
+  <view>
+    <button @click="WxLogin()" type="default">登录</button>
+    <button @click="getUser()" type="default">获取用户信息</button>
+    <button @click="logout()" tyoe="default">登出</button>
+  </view>
 </template>
 
 <script>
-import { loginWechat } from '../../common/js/api/models.js';
+import { loginWechat, getUser, logout } from "../../common/js/api/models.js";
+import { apiResquest } from "../../common/js/api/request.js";
 export default {
-	data() {
-		return {};
-	},
-	onLoad() {},
-	methods: {
-		xcxWxLogin() {
-			var self = this;
-			uni.login({
-				provider: 'weixin',
-				success: function(res) {
-					if (res.code) {
-						loginWechat({ code: res.code })
-							.then(res => {
-								// uni.setStorage({
-								// 	key: 'openid_key',
-								// 	data: res.data.openid
-								// });
-								if (res.data) {
-									self.isFirstWXLogin = false;
-								}
-							})
-							.catch(err => {
-								console.log(err);
-							});
-					} else {
-						console.log('登录失败！' + res.errMsg);
-					}
-				},
-				fail(e) {
-					console.log(e);
-				},
-				complete(e) {
-					console.log(e);
-				}
-			});
-		},
-		test() {}
-	},
-	onReady() {}
+  data() {
+    return {};
+  },
+  onLoad() {},
+  methods: {
+    WxLogin() {
+      var self = this;
+      //   uni.login({
+      //     provider: "weixin",
+      //     success: function (res) {
+      //       if (res.code) {
+      //       } else {
+      //         console.log("登录失败！" + res.errMsg);
+      //       }
+      //     },
+      //     fail(e) {
+      //       console.log(e);
+      //     },
+      //     complete(e) {
+      //       console.log(e);
+      //     },
+      //   });
+      loginWechat({ username: "Agitator", password: "1" })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getUser() {
+      getUser();
+    },
+    logout() {
+      logout();
+    },
+  },
+  onReady() {},
 };
 </script>
 

@@ -1,7 +1,5 @@
 /* model�*/
-import {
-	apiResquest
-} from "./request.js"
+import { apiResquest } from "./request.js"
 
 // ��ȡ�û��б�
 export const getList = (query) => {
@@ -34,13 +32,11 @@ export const getTrendsList = (query) => {
 	})
 }
 
-//��¼
-export const loginWechat = (query) => {
-	return apiResquest({
-		url: '###',
-		method: 'POST',
-		query: {
-			...query
-		},
-	})
-}
+//登录
+export const loginWechat = (query) => apiResquest('/api/login', { method: 'POST', query })
+//获取用户
+export const getUser = (query) => apiResquest("/api/getUser", { method: 'GET', query })
+//登出
+export const logout = (query) => apiResquest("/api/logout", { method: 'GET', query })
+
+

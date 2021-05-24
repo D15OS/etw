@@ -1,156 +1,72 @@
 <template>
-  <view class="editor-wrapper">
-    <editor
-      id="editor"
-      class="ql-container"
-      :placeholder="placeholder"
-      @statuschange="onStatusChange"
-      :read-only="readOnly"
-      @ready="onEditorReady"
-    ></editor>
-    <!-- 编辑器按钮 -->
-    <div class="editor-button-group">
-      <u-icon name="photo" size="50" @click="insertImage"></u-icon>
-      <u-icon name="list" size="50" @click="insertImage"></u-icon>
-      <u-icon name="list-dot" size="50" @click="insertImage"></u-icon>
-      <span class="fa fa-camera-retro fa-lg"></span>
-    </div>
-    <button @click="insertImage">图片</button>
-    <button @click="getEditorContent">获取表单内容</button>
+  <view class="container-box">
+    <view class="main-image-box">
+      <u-upload
+        ref="uUpload"
+        :action="action"
+        :auto-upload="false"
+        :file-list="fileList"
+        :max-size="5 * 1024 * 1024"
+        max-count="9"
+        :show-tips="false"
+        upload-text=" "
+        del-bg-color="rgb(0, 0, 0,0)"
+        :custom-btn="true"
+      >
+        <view
+          slot="addBtn"
+          class="slot-btn"
+          hover-class="slot-btn__hover"
+          hover-stay-time="150"
+          ><u-icon
+            name="photo"
+            size="60"
+            :color="$u.color['lightColor']"
+          ></u-icon
+        ></view>
+      </u-upload>
+    </view>
+    <RichTextEditor></RichTextEditor>
   </view>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      placeholder: "开始输入...",
-      readOnly: false,
-      formats: {},
-    };
-  },
-  methods: {
-    readOnlyChange() {
-      this.readOnly = !this.readOnly;
-    },
-    onEditorReady() {
-      uni
-        .createSelectorQuery()
-        .select("#editor")
-        .context((res) => {
-          this.editorCtx = res.context;
-        })
-        .exec();
-    },
-    undo() {
-      this.editorCtx.undo();
-    },
-    redo() {
-      this.editorCtx.redo();
-    },
-    format(e) {
-      let { name, value } = e.target.dataset;
-      if (!name) return;
-      // console.log('format', name, value)
-      this.editorCtx.format(name, value);
-    },
-    onStatusChange(e) {
-      const formats = e.detail;
-      this.formats = formats;
-    },
-    insertDivider() {
-      this.editorCtx.insertDivider({
-        success: function () {
-          console.log("insert divider success");
-        },
-      });
-    },
-    clear() {
-      this.editorCtx.clear({
-        success: function (res) {
-          console.log("clear success");
-        },
-      });
-    },
-    removeFormat() {
-      this.editorCtx.removeFormat();
-    },
-    insertDate() {
-      const date = new Date();
-      const formatDate = `${date.getFullYear()}/${
-        date.getMonth() + 1
-      }/${date.getDate()}`;
-      this.editorCtx.insertText({
-        text: formatDate,
-      });
-    },
-    insertImage() {
-      let that = this;
-
-      // 选择图片
-      uni.chooseImage({
-        sizeType: ["original"],
-        sourceType: ["album", "camera"],
-        count: 1,
-        success: (res) => {
-          // 上传图片
-          uni.uploadFile({
-            url: "",
-            fileType: "image",
-            filePath: res.tempFilePaths[0],
-            name: "file",
-
-            success: (data) => {
-              console.log(data);
-              that.editorCtx.insertImage({
-                src: data,
-                alt: "图像",
-                success: function () {
-                  console.log("insert image success");
-                },
-              });
-            },
-            fail: (error) => {
-              console.log("上传错误：" + error);
-            },
-          });
-        },
-        fail: (error) => {
-          console.log("选择图片错误：" + error);
-        },
-      });
-    },
-    getEditorContent() {
-      this.editorCtx.getContents({
-        success: (res) => {
-          console.log(res.delta);
-        },
-      });
-    },
-  },
-};
+export default {};
 </script>
-
-<style>
-page {
-  background-color: rgb(245, 245, 245);
-}
-.editor-wrapper {
-  margin-top: 30rpx;
-  border-radius: 45rpx 45rpx 0 0;
-  height: calc(100vh - var(--window-top) - var(--status-bar-height) - 140px);
+<style lang="scss" scoped>
+.container-box {
   background-color: white;
+  height: 100vh;
+  .main-image-section {
+    padding: 24rpx 30rpx 8rpx 30rpx;
+    font-size: 36rpx;
+  }
+  .main-image-box {
+    padding: 24rpx 30rpx 24rpx 30rpx;
+    border-bottom: 1rpx solid $uni-color-grey;
+    display: flex;
+  }
 }
-.ql-container {
-  box-sizing: border-box;
-  padding: 12px 15px;
-  width: 100%;
-  min-height: 30vh;
-  height: 100%;
-  font-size: 16px;
-  line-height: 1.5;
+.slot-btn {
+  width: 200rpx;
+  height: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(244, 245, 246);
+  border-radius: 20rpx;
+  margin: 8rpx;
 }
-.editor-button-group{
-  padding: 15rpx;
+.slot-btn__hover {
+  background-color: rgb(235, 236, 238);
+}
+.upload-btn {
+  width: 200rpx;
+  height: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(244, 245, 246);
+  margin: 8rpx;
 }
 </style>
