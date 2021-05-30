@@ -5,9 +5,9 @@
 **/
 export const apiResquest = (url,prams) => {
 	//请求头
-	let headerData = {}
+	let headerData = {};
 	//请求参数
-	let dataObj = null
+	let dataObj = null;
 	// 判断请求类型
 	switch (prams.method) {
 		case "GET":
@@ -33,10 +33,10 @@ export const apiResquest = (url,prams) => {
 			method: prams.method,
 			header: headerData,
 			success: (res) => {
-				uni.hideLoading()
+				uni.hideLoading();
 				if (res.data.errorCode !== 200) {
 					uni.showToast({
-						title: '获取数据失败:' + res.data.errorMsg,
+						title: '获取数据失败:' + res.errorMsg,
 						duration: 1000,
 						icon: "none"
 					})
@@ -45,7 +45,7 @@ export const apiResquest = (url,prams) => {
 				// setTimeout(function() {
 				// 	resolve(res.data);
 				// }, 2000)
-				resolve(res);
+				resolve(res.data);
 			},
 			fail: (err) => {
 				reject(err);

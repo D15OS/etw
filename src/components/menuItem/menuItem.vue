@@ -13,13 +13,14 @@
         <u-icon v-show="isArrow" name="arrow-right"></u-icon>
       </view>
     </view>
+    <!-- 换行slot -->
     <slot name="rowContent"></slot>
   </view>
 </template>
 
 <script>
 export default {
-  name: "testComponents",
+  name: "menuItem",
   props: {
     title: String, //左侧标题
     iconName: String, //左侧图标名 为空则没有图标

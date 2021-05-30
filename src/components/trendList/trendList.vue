@@ -1,13 +1,17 @@
 <template>
-  <view class="trend-list-box">
-    <view v-for="(item, index) in trendsList" :key="index" class="container">
-      <!-- 作者头像 作者名 作者描述 -->
+  <view class="container">
+    <!-- 动态容器 -->
+    <view v-for="(item, index) in trendList" :key="index" class="trend-box">
+      <!-- 用户信息容器 -->
       <view class="author-box">
+        <!-- 头像 -->
         <u-avatar></u-avatar>
         <view class="author-name-box">
+          <!-- 用户名 -->
           <view class="author-name">{{ item.authorName }}</view>
           <view class="author-description">{{ item.authorDescription }}</view>
         </view>
+        <!-- 右侧按钮组 -->
         <view class="button-group">
           <button class="moreButton">
             <u-icon name="more-dot-fill"></u-icon>
@@ -15,7 +19,12 @@
         </view>
       </view>
       <!-- 动态文本 -->
-      <view class="trendText">{{ item.trendText }}</view>
+      <view class="trendText">
+        <u-read-more color="#808080" close-text="展开" :toggle="true">
+          {{ item.trendText }}
+        </u-read-more>
+      </view>
+
       <!-- 动态图片 -->
       <trendsImageGroup
         v-bind:imageList="item.trendImageList"
@@ -25,35 +34,26 @@
 </template>
 
 <script>
-import { getTrendsList } from "../../common/js/api/models.js";
 export default {
-  name: "trendsList",
+  name: "trendList",
+  props: {
+    trendList: Array,
+  },
   data() {
-    return {
-      trendsList: [],
-    };
+    return {};
   },
-  created() {
-    let that = this;
-    getTrendsList()
-      .then((res) => {
-        that.trendsList = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },
+  created() {},
 };
 </script>
 
 <style lang="scss" scoped>
-.trend-list-box {
+.container {
   margin: 5vw 0 2.5vw 2.5vw;
   width: 95vw;
   background-color: #ffffff;
   border-radius: 30rpx 30rpx 0 0;
 }
-.container {
+.trend-box {
   padding: 6vw 4vw;
 }
 .author-box {
@@ -76,7 +76,7 @@ export default {
       margin-top: 1vw;
       font-weight: lighter;
       font-size: 24rpx;
-      color: $uni-color-grey;
+      color: $uni-text-color-placeholder;
     }
   }
   .button-group {
@@ -90,7 +90,6 @@ export default {
     }
   }
 }
-
 .trendText {
   margin: 2vw 0;
   padding: 0 1vw;
