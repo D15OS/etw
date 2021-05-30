@@ -1,37 +1,11 @@
-/* model�*/
 import { apiResquest } from "./request.js"
 
-// ��ȡ�û��б�
-export const getList = (query) => {
-	return apiResquest({
-		url: 'api/test',
-		method: 'GET',
-		query: {
-			...query
-		}
-	})
-}
-// ��ȡ�������û�
-export const getAuthorList = (query) => {
-	return apiResquest({
-		url: 'api/authorList',
-		method: 'GET',
-		query: {
-			...query
-		}
-	})
-}
-// ��ȡ��̬�б�
-export const getTrendsList = (query) => {
-	return apiResquest({
-		url: 'api/trendsList',
-		method: 'GET',
-		query: {
-			...query
-		}
-	})
-}
-
+// 获取作品列表
+export const getList = (query) => apiResquest('mockApi/test', { method: 'GET', query })
+// 获取常看作者
+export const getAuthorList = (query) => apiResquest('mockApi/authorList', { method: 'GET', query })
+// 获取动态列表
+export const getTrendList = (query) => apiResquest('mockApi/trendsList', { method: 'GET', query })
 //登录
 export const loginWechat = (query) => apiResquest('/api/login', { method: 'POST', query })
 //获取用户

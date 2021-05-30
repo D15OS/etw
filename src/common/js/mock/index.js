@@ -1,8 +1,8 @@
 const Mock = require('better-mock/dist/mock.mp.js')
 
-Mock.mock('api/test', {
-	'code': '200',
-	'error_msg': '',
+Mock.mock('mockApi/test', {
+	'errorCode': 200,
+	'errorMsg': '错误',
 	'data|10': [{
 		'id|+1': 1,
 		'avatarImage': "@image()",
@@ -13,9 +13,9 @@ Mock.mock('api/test', {
 	}]
 })
 
-Mock.mock('api/authorList', {
-	'code': "200",
-	'error_msg': '',
+Mock.mock('mockApi/authorList', {
+	'errorCode': 200,
+	'errorMsg': '',
 	'data|8': [{
 		'id|+1': 1,
 		'authorImage': "@image()",
@@ -23,9 +23,9 @@ Mock.mock('api/authorList', {
 	}]
 })
 
-Mock.mock('api/trendsList', {
-	'code': "200",
-	'error_msg': '',
+Mock.mock('mockApi/trendsList', {
+	'errorCode': 200,
+	'errorMsg': '',
 	'data|8': [{
 		'id|+1': 1,
 		'authorName': "@ctitle(5,10)",
@@ -33,6 +33,6 @@ Mock.mock('api/trendsList', {
 		'trendImageList|1-9': [
 			"@image()"
 		],
-		'trendText': "@ctitle(15,140)",
+		'trendText': "@ctitle(666,777)",
 	}]
 })

@@ -1,5 +1,6 @@
 <template>
-  <view class="editor-wrapper">
+  <view class="container">
+    <!-- 编辑器标题 -->
     <input class="editor-title" type="text" placeholder="请输入标题" />
     <!-- 编辑器按钮 -->
     <view class="editor-group">
@@ -41,6 +42,7 @@
         ></text>
       </view>
     </view>
+    <!-- 编辑器本体 -->
     <editor
       id="editor"
       class="editor-container"
@@ -48,26 +50,25 @@
       @statuschange="onStatusChange"
       @ready="onEditorReady"
     ></editor>
-    <button @click="getEditorContent">获取表单内容</button>
   </view>
 </template>
 
 <script>
 export default {
-  name: "RichTextEditor",
+  name: "richTextEditor",
   data() {
     return {
       placeholder: "请输入正文",
-      formats: {},
+      formats: {},// 编辑器内样式列表
     };
   },
   methods: {
+    //编辑器初始化
     onEditorReady() {
       this.createSelectorQuery()
         .select("#editor")
         .context((res) => {
           this.editorCtx = res.context;
-          console.log(res);
         })
         .exec();
     },
@@ -106,7 +107,7 @@ export default {
           //       src: data,
           //       alt: "图像",
           //       success: function () {
-          //         console.log("insert image success");
+          //         console.log("添加图片成功");
           //       },
           //     });
           //   },
@@ -118,7 +119,7 @@ export default {
             src: res.tempFilePaths[0],
             alt: "图像",
             success: function () {
-              console.log("insert image success");
+              console.log("添加图片成功");
             },
           });
         },
@@ -127,6 +128,7 @@ export default {
         },
       });
     },
+    // 获取编辑器内容
     getEditorContent() {
       this.editorCtx.getContents({
         success: (res) => {
@@ -138,8 +140,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.editor-wrapper {
+<style lang="scss" scoped>
+.container {
   background-color: white;
 }
 .editor-title {
