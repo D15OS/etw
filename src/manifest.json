@@ -79,7 +79,7 @@
         "devServer": {
             "proxy": {
                 "/api": {
-                    "target": "http://etw-api.cn.utools.club",
+                    "target": "http://172.16.172.24:8888",
                     "changeOrigin": true,
                     "secure": false,
                     "pathRewrite": {

@@ -11,7 +11,6 @@
           @click="chooseTag(item)"
         />
       </view>
-    </transition>
   </scroll-view>
 </template>
 

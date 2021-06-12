@@ -1,14 +1,17 @@
 <template>
-  <view>
-    <u-waterfall v-model="flowList" ref="uWaterfall">
+  <view class="container">
+    <waterFall v-model="dataList" ref="uWaterfall">
       <!-- 左边瀑布 -->
       <template v-slot:left="{ leftList }">
-        <view class="work-box" v-for="(item, index) in leftList" :key="index">
+        <view
+          class="work-box-left"
+          v-for="(item, index) in leftList"
+          :key="index"
+        >
           <!-- 图片 -->
           <u-lazy-load
             threshold="-250"
-            loading-img=""
-            error-img=""
+            :loading-img="loadingImage"
             :image="item.image"
             :index="index"
           ></u-lazy-load>
@@ -23,13 +26,16 @@
       </template>
       <!-- 右边瀑布 -->
       <template v-slot:right="{ rightList }">
-        <view class="work-box" v-for="(item, index) in rightList" :key="index">
+        <view
+          class="work-box-right"
+          v-for="(item, index) in rightList"
+          :key="index"
+        >
           <!-- 图片 -->
           <u-lazy-load
-            threshold="-250"
+            threshold="-150"
             :image="item.image"
-            loading-img=""
-            error-img=""
+            :loading-img="loadingImage"
             :index="index"
           ></u-lazy-load>
           <!-- 标题 -->
@@ -41,28 +47,54 @@
           </view>
         </view>
       </template>
-    </u-waterfall>
+    </waterFall>
   </view>
 </template>
 
 <script>
-import { getList } from "../../common/js/api/models.js";
 export default {
-  name: "worksList",
+  name: "workWater",
   props: {
     flowList: Array,
   },
   data() {
-    return {};
+    return {
+      dataList: [],
+      loadingImage: "../../static/images/lazyLoding.jpg",
+    };
   },
-  methods: {},
+  methods: {
+    //清除瀑布流内的数据
+    refresh() {
+      this.$refs.uWaterfall.clear();
+    },
+  },
+  watch: {
+    flowList: function() {
+      this.dataList = this.flowList;
+      // console.log("workwater获取到的数据:");
+      // console.table(this.dataList);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.work-box {
-  border-radius: 15rpx 15rpx;
-  margin: 10rpx 5rpx;
+$marginX: 5rpx;
+$marginY: 5rpx;
+$borderRadius: 10rpx;
+.container {
+  background-color: $uni-color-grey;
+}
+.work-box-left {
+  margin: 5rpx $marginX $marginY 0;
+}
+.work-box-right {
+  margin: 5rpx 0 $marginY $marginX;
+}
+.work-box-left,
+.work-box-right {
+  border-radius: $borderRadius $borderRadius;
   background-color: #ffffff;
   overflow: hidden;
   position: relative;

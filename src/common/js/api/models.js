@@ -1,7 +1,7 @@
 import { apiResquest } from "./request.js"
 
 // 获取作品列表
-export const getList = (query) => apiResquest('mockApi/test', { method: 'GET', query })
+export const getWorkList = (query) => apiResquest('mockApi/test', { method: 'GET', query })
 // 获取常看作者
 export const getAuthorList = (query) => apiResquest('mockApi/authorList', { method: 'GET', query })
 // 获取动态列表

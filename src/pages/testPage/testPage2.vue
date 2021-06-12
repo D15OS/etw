@@ -1,17 +1,33 @@
 <template>
   <view>
-    <tabs
+    <!-- <tabs
       :list="list"
       :is-scroll="false"
       :current="current"
       @change="change"
-    ></tabs>
+    ></tabs> -->
+
     <!-- 骨架屏组件 -->
-    <workSkeleton v-if="loading"></workSkeleton>
+    <!-- <workSkeleton v-if="loading"></workSkeleton> -->
     <!-- 作品瀑布流组件 -->
-    <workWater :flowList="workList"></workWater>
-    <!-- 加载更多组件 -->
-    <u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus"></u-loadmore>
+    <loadRefresh
+      ref="loadRefresh"
+      :isRefresh="true"
+      refreshType="halfCircle"
+      color="#6cd4ff"
+      backgroundCover="#f4f5f6"
+      :currentPage="1"
+      :totalPages="2"
+      @loadMore="loadWorkList()"
+      @refresh="loadWorkList()"
+    >
+      <!-- 瀑布流容器 -->
+      <workWater
+        slot="content-list"
+        ref="workWater"
+        :flowList="workList"
+      ></workWater>
+    </loadRefresh>
   </view>
 </template>
 
@@ -39,7 +55,7 @@ export default {
   },
   onLoad() {
     let that = this;
-    getWorkList()
+    getWorkList({ page: 1 })
       .then((res) => {
         that.workList = res.data;
         that.loading = false;
@@ -48,24 +64,23 @@ export default {
         console.log(err);
       });
   },
-  onReachBottom() {
-    this.loadStatus = "loading";
-    this.loadWorkList();
-  },
+  // onReachBottom() {
+  //   this.loadStatus = "loading";
+  //   this.loadWorkList();
+  // },
   methods: {
     //加载作品列表
     loadWorkList() {
-      setTimeout(() => {
-        let that = this;
-        getWorkList()
-          .then((res) => {
-            that.workList.push.apply(that.workList, res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        this.loadStatus = "loadmore";
-      }, 2000);
+      let that = this;
+      getWorkList({ page: 1 })
+        .then((res) => {
+          that.workList.push.apply(that.workList, res.data);
+          this.$refs.loadRefresh.completed(); //结束加载过程
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      this.loadStatus = "loadmore";
     },
     change(index) {
       this.current = index;

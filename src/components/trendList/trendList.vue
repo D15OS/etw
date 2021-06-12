@@ -24,8 +24,7 @@
           {{ item.trendText }}
         </u-read-more>
       </view>
-
-      <!-- 动态图片 -->
+      <!-- 动态图片组 -->
       <trendsImageGroup
         v-bind:imageList="item.trendImageList"
       ></trendsImageGroup>

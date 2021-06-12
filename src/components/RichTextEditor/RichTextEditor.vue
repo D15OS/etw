@@ -5,7 +5,7 @@
     <!-- 编辑器按钮 -->
     <view class="editor-group">
       <view @tap="format" class="editor-button-group">
-        <text class="fa fa-image fa-lg" @click="insertImage"></text>
+        <text class="fa fa-image fa-lg" @click="insertImageTest"></text>
         <text
           :class="formats.italic ? 'ql-active' : ''"
           data-name="italic"
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       placeholder: "请输入正文",
-      formats: {},// 编辑器内样式列表
+      formats: {}, // 编辑器内样式列表
     };
   },
   methods: {
@@ -128,6 +128,116 @@ export default {
         },
       });
     },
+    insertImageTest() {
+      let chooseImage = () => {
+        return new Promise((resolve, reject) => {
+          // 选择图片
+          uni.chooseImage({
+            count: 4,
+            success: (res) => {
+              if (
+                res.tempFilePaths === undefined ||
+                res.tempFilePaths.length == 0
+              ) {
+                console.log("请选择图片");
+              } else {
+                return resolve(res.tempFilePaths);
+              }
+            },
+            fail: (err) => {
+              return reject(err);
+            },
+          });
+        });
+      };
+      //获取签名
+      let checkSign = (tempFilePaths) => {
+        return new Promise((resolve, reject) => {
+          uni.request({
+            url: "/api/signature-oss/dynamic-image",
+            success: (res) => {
+              tempFilePaths.map((imgPath) => {
+                let signData = res;
+                if (signData.statusCode === 200) {
+                  let signData = signData.data.data;
+                  return resolve({ imgPath, signData });
+                } else {
+                  return reject("请求签名错误");
+                }
+              });
+            },
+            fail: (err) => {
+              return reject(err);
+            },
+          });
+        });
+      };
+      // 上传图片
+      let uploadImage = (updateData) => {
+        return new Promise((resolve, reject) => {
+          let signData = updateData.signData;
+          let imgPath = updateData.imgPath;
+          let _this = this;
+          const uploadTask = uni.uploadFile({
+            url: signData.host,
+            filePath: imgPath,
+            fileType: "image",
+            name: "file",
+            formData: {
+              // 随机生成一个键，这个将是数据库存储的关键，访问需要通过他
+              key:
+                signData.dir +
+                new String(new Date().getTime()).split("").reverse().join("") +
+                Math.floor(Math.random() * 10000000),
+              policy: signData.policy,
+              OSSAccessKeyId: signData.accessId,
+              success_action_status: "200", //让服务端返回200,不然，默认会返回204
+              signature: signData.signature,
+            },
+            success: (res) => {
+              console.log("uploadImage success, res is:", res);
+              uni.showToast({
+                title: "上传成功",
+                icon: "success",
+                duration: 1000,
+              });
+              //插入富文本编辑器
+              this_.editorCtx.insertImage({
+                src: imgPath,
+              });
+            },
+            fail: (err) => {
+              console.log("uploadImage fail", err);
+              uni.showModal({
+                content: err.errMsg,
+                showCancel: false,
+              });
+              return reject(err);
+            },
+          });
+          //监听上传进度变化事件
+          uploadTask.onProgressUpdate(function (res) {
+            _this.percent = res.progress;
+            console.log("上传进度" + res.progress);
+            console.log("已经上传的数据长度" + res.totalBytesSent);
+            console.log(
+              "预期需要上传的数据总长度" + res.totalBytesExpectedToSend
+            );
+          });
+        });
+      };
+      chooseImage()
+        .then((tempFilePaths) => {
+          return checkSign(tempFilePaths);
+        })
+        .then((updateData) => {
+          return uploadImage(updateData);
+        })
+        .catch((err) => {
+          console.log("上传图片错误", err);
+        });
+    },
+
     // 获取编辑器内容
     getEditorContent() {
       this.editorCtx.getContents({

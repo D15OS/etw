@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: "worksSkeleton",
+  name: "workSkeleton",
   data() {
     return {};
   },
@@ -46,11 +46,12 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  background-color: $uni-color-grey;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
   .work-warter {
     width: 48vw;
+    height: 450rpx;
     border-radius: 15rpx 15rpx;
     margin: 10rpx 5rpx;
     background-color: #ffffff;
@@ -58,7 +59,7 @@ export default {
     position: relative;
   }
   .work-image {
-    height: 400rpx;
+    height: 250rpx;
     width: 100%;
     border-radius: 15rpx 15rpx 0 0;
   }
