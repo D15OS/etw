@@ -45,7 +45,6 @@ export default {
   methods: {
     //获取页面数据
     loadData(refresh) {
-      console.log("一次");
       if (this.isLoading) {
         return;
       }

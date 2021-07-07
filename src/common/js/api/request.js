@@ -1,7 +1,8 @@
 /**
  *封装请求
- *@param {Object} 接口API的参数
- *@return {Promise} 请求到的数据
+ *@param {Object} url 接口API的地址
+ *@param {Object} prams 接口API的请求参数
+ *@return {Promise} 请求结果
  **/
 export const apiResquest = (url, prams) => {
   //请求头
