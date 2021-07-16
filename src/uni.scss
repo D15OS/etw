@@ -37,6 +37,10 @@
   /* 超出部分省略号 */
 }
 
+@function rpx($value) {
+	@return $value * 1rpx;	/* 拼接rpx */
+}
+
 /* 颜色变量 */
 
 /* 行为相关颜色 */

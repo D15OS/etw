@@ -7,6 +7,11 @@ page {
   background-color: $uni-color-grey;
 }
 </style>
+
+<style>
+    @import "common/css/animate.css";
+</style>
+
 <script>
 export default {
   onLaunch: function() {
