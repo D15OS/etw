@@ -4,7 +4,7 @@
   },
   "pages": [
     {
-      "path": "pages/login/login",
+      "path": "pages/login/loginTest",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
