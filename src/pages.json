@@ -1,19 +1,6 @@
 {
-<<<<<<< HEAD
-  "easycom": {
-    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-  },
-  "pages": [
-    {
-      "path": "pages/login/loginTest",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-=======
     "easycom": {
         "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
->>>>>>> Cowjiang
     },
     "pages": [
         {
