@@ -29,6 +29,7 @@ export const apiResquest = (url, prams) => {
       break;
   }
   return new Promise((resolve, reject) => {
+    console.log(url);
     return uni.request({
       url: url,
       data: dataObj,

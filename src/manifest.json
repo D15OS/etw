@@ -75,11 +75,12 @@
     "usingComponents": true
   },
   "h5": {
-    "publicPath": "./",
     "devServer": {
+      "port": 8080,
+      "disableHostCheck": true,
       "proxy": {
         "/api": {
-          "target": "http://172.16.172.24:8889",
+          "target": "http://us-or-cera-1.natfrp.cloud:21671",
           "changeOrigin": true,
           "secure": false,
           "pathRewrite": {

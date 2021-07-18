@@ -31,7 +31,6 @@ import {
   getUser,
   logout,
 } from "../../common/js/api/models.js";
-import { apiResquest } from "../../common/js/api/request.js";
 import { Validator } from "../../common/js/validate/validate.js";
 export default {
   data() {
@@ -60,9 +59,9 @@ export default {
           key: "password",
         },
       ];
-      let validator = new Validator();
-      let isValidated = validator.validate(data, rules);
-      if (isValidated === true) {
+      // let validator = new Validator();
+      // let isValidated = validator.validate(data, rules);
+      // if (isValidated === true) {
         loginTest({ username: this.username, password: this.password })
           .then((res) => {
             console.log(res);
@@ -70,9 +69,9 @@ export default {
           .catch((err) => {
             console.log(err);
           });
-      } else {
-        console.log("验证错误", isValidated);
-      }
+      // } else {
+      //   console.log("验证错误", isValidated);
+      // }
     },
     register() {
       registerTest({
