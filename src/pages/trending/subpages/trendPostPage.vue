@@ -63,7 +63,7 @@ export default {
     closeChosenTag() {
       this.showTagBox = true;
       this.isArrowByMap = true;
-    }
+    },
   },
 };
 </script>
