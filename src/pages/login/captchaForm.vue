@@ -41,7 +41,7 @@
                 showCaptchaForm: 'none',  //控制注册窗体显示隐藏
                 captchaFormAnimation: '',  //注册窗体动效
                 captchaUsernameType: 1,  //注册的用户名类型，[0: 手机号, 1: 电子邮箱]
-                captchaUsername: 'cowjiang@163.com',  //注册的用户名
+                captchaUsername: '',  //注册的用户名
                 captchaResendInterval: 60,  //重新发送验证码的间隔（秒）
                 captchaResendDelay: 0,  //重新发送验证码剩余时间
                 captchaRawInputValue: '',  //验证码原始输入框的值
@@ -58,15 +58,20 @@
              * 发送验证码
              */
             sendCaptcha() {
-                setTimeout(()=>{
-                    wx.showToast({
-                        title: '已发送验证码',
-                        icon: 'success',
-                        duration: 2000
-                    });
-                    this.captchaResendDelay = this.captchaResendInterval;
-                    this.computeCaptchaResendDelay();
-                }, 100)
+                if (this.captchaUsername === '') {
+                    this.$parent.toRegisterScreen();
+                }
+                else {
+                    setTimeout(()=>{
+                        wx.showToast({
+                            title: '已发送验证码',
+                            icon: 'success',
+                            duration: 2000
+                        });
+                        this.captchaResendDelay = this.captchaResendInterval;
+                        this.computeCaptchaResendDelay();
+                    }, 100)
+                }
             },
             /**
              * 计算重新发送验证码的剩余时间
