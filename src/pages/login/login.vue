@@ -1,5 +1,7 @@
 <template>
   <view>
+    <!-- 导航栏 -->
+    <navigationBar ref="navigationBar"></navigationBar>
     <!-- 背景占位 -->
     <view class="background-placeholder"></view>
     <!-- S 启动界面 -->
@@ -48,6 +50,7 @@
 </template>
 
 <script>
+import { navigationBar } from "../../components/navigationBar/navigationBar.vue";
 import loginForm from "./loginForm.vue";
 import registerForm from "./registerForm.vue";
 import captchaForm from "./captchaForm.vue";
@@ -57,15 +60,11 @@ export default {
     loginForm,
     registerForm,
     captchaForm,
+    navigationBar,
   },
   data() {
     return {
-      username: "",
-      password: "",
-      emailCode: "",
-      // windowWidth: 0,  //设备窗口宽度
-      // windowHeight: 0,  //设备窗口高度
-      splashScreenDuration: 0, //启动界面持续时间（值为0时为不显示启动界面）
+      splashScreenDuration: 1500, //启动界面持续时间（值为0时为不显示启动界面）
       initialScreen: 0, //启动界面推出后的初始显示界面，[0: 登陆界面, 1: 注册界面, 2: 验证码界面（仅供调试）]
       splashScreenAnimation: "animate__animated animate__fadeIn", //启动界面动效
       showSplashScreen: "", //控制启动界面显示隐藏
@@ -75,18 +74,6 @@ export default {
     };
   },
   onLoad() {},
-  mounted() {
-    /*
-                wx.getSystemInfo({
-                    success: res => {
-                        [this.windowWidth, this.windowHeight] = [res.windowWidth, res.windowHeight];  //获取设备窗口尺寸
-                    }
-                });
-     */
-    setTimeout(() => {
-      this.splashScreenExit();
-    }, this.splashScreenDuration); //在启动界面持续时间结束后进入登录界面
-  },
   methods: {
     /**
      * 启动界面退出
@@ -140,6 +127,7 @@ export default {
         "animate__animated animate__fadeInRight";
       setTimeout(() => {
         this.$refs["registerForm"].showRegisterForm = "";
+        this.$refs["captchaForm"].showCaptchaForm = "none";
         setTimeout(() => {
           this.$refs["loginForm"].showLoginForm = "none";
         }, 300);
@@ -163,6 +151,7 @@ export default {
         "animate__animated animate__fadeInLeft";
       setTimeout(() => {
         this.$refs["loginForm"].showLoginForm = "";
+        this.$refs["captchaForm"].showCaptchaForm = "none";
         setTimeout(() => {
           this.$refs["registerForm"].showRegisterForm = "none";
         }, 300);
@@ -184,7 +173,11 @@ export default {
       }, 300);
     },
   },
-  onReady() {},
+  mounted() {
+    setTimeout(() => {
+      this.splashScreenExit();
+    }, this.splashScreenDuration); //在启动界面持续时间结束后进入登录界面
+  },
 };
 </script>
 
@@ -204,7 +197,7 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  z-index: 99999;
 
   .bg-image {
     width: 100vw;

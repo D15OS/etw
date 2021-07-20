@@ -132,7 +132,6 @@ export default {
           break;
       }
     },
-
     /**
      * 输入框失焦事件
      */
@@ -280,6 +279,12 @@ export default {
             this.$parent.$refs["captchaForm"].captchaUsername = this.phone;
             this.$parent.$refs["captchaForm"].captchaUsernameType = 0;
           }
+          this.$parent.$refs["navigationBar"].setNavigation(
+            true,
+            true,
+            "注册",
+            this.$parent.toRegisterScreen
+          );
           this.$parent.toCaptchaScreen();
         } else {
           this.$refs.toast.show({
@@ -311,6 +316,12 @@ export default {
         this.usernamePlaceholderStyle,
         this.passwordPlaceholderStyle,
       ] = ["", "", "", ""]; //还原输入区域样式
+      this.$parent.$refs["navigationBar"].setNavigation(
+        true,
+        true,
+        "登录",
+        this.$parent.toRegisterScreen
+      );
       this.$parent.toLoginScreen();
     },
   },

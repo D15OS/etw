@@ -84,6 +84,13 @@ export default {
     };
   },
   onLoad() {},
+  watch: {
+    showLoginForm(nval, oval) {
+      if (nval === "") {
+        this.$parent.$refs["navigationBar"].setNavigation(true, true, "登录");
+      }
+    },
+  },
   methods: {
     /**
      * 输入框聚焦事件
@@ -252,6 +259,12 @@ export default {
         this.usernamePlaceholderStyle,
         this.passwordPlaceholderStyle,
       ] = ["", "", "", ""]; //还原输入区域样式
+      this.$parent.$refs["navigationBar"].setNavigation(
+        true,
+        true,
+        "注册",
+        this.$parent.toLoginScreen
+      );
       this.$parent.toRegisterScreen();
     },
     /**
