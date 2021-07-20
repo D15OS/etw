@@ -1,6 +1,9 @@
 {
     "easycom": {
-        "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+        "autoscan": true,
+        "custom": {
+            "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+        }
     },
     "pages": [
         {
@@ -49,6 +52,13 @@
         },
         {
             "path": "pages/home/subpages/imagePostPage",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/home/subpages/upload-file",
             "style": {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false

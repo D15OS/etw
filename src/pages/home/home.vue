@@ -1,17 +1,9 @@
 <template>
   <view>
-    <tabs
-      :list="list"
-      :is-scroll="false"
-      :current="current"
-      @change="change"
-    ></tabs>
     <!-- 骨架屏组件 -->
     <workSkeleton v-if="loading"></workSkeleton>
     <!-- 作品瀑布流组件 -->
     <workWater :flowList="workList"></workWater>
-    <!-- 加载更多组件 -->
-    <u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus"></u-loadmore>
   </view>
 </template>
 
@@ -32,7 +24,6 @@ export default {
         },
       ],
       current: 0,
-      loadStatus: "loadmore", //加载更多加载状态
       loading: true, //骨架屏加载状态
       workList: [], //作品列表
     };
