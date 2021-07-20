@@ -179,6 +179,7 @@
                 if (this.$parent.username !== '' && this.$parent.password !== '') {
                     this.$parent.$refs['captchaForm'].captchaUsername = this.$parent.username;
                     this.isEmailInput === true ? this.$parent.$refs['captchaForm'].captchaUsernameType = 1 : this.$parent.$refs['captchaForm'].captchaUsernameType = 0;
+                    this.$parent.$refs['navigationBar'].setNavigation(true, true, '注册', this.$parent.toRegisterScreen);
                     this.$parent.toCaptchaScreen();
                 }
                 else {
@@ -194,6 +195,7 @@
              */
             loginNow() {
                 [this.usernameContainerStyle, this.passwordContainerStyle, this.usernamePlaceholderStyle, this.passwordPlaceholderStyle] = ['', '', '', ''];  //还原输入区域样式
+                this.$parent.$refs['navigationBar'].setNavigation(true, true, '登录', this.$parent.toRegisterScreen);
                 this.$parent.toLoginScreen();
             }
         },
