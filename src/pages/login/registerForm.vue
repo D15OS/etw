@@ -81,6 +81,8 @@
     </view>
     <!-- E 下方按钮区域 -->
     <toast ref="toast" />
+    <mask :show="isShow" @click="isShow = false"> </mask>
+    <!-- <u-mask :show="isShow" @click="isShow = false"></u-mask> -->
   </view>
 </template>
 
@@ -104,6 +106,8 @@ export default {
       email: "", //邮箱输入框中的值
       phone: "", //手机号输入框中的值
       password: "", //密码输入框中的值
+      isShow: true,
+      show: true,
     };
   },
   onLoad() {},
@@ -229,6 +233,9 @@ export default {
       //       duration: 2000,
       //     });
       //   }
+      this.isShow = true;
+      console.log(this.isShow);
+      // this.$refs.verify.show();
       let data, rules;
       if (this.isEmailInput) {
         data = {

@@ -64,7 +64,7 @@ export default {
   },
   data() {
     return {
-      splashScreenDuration: 1500, //启动界面持续时间（值为0时为不显示启动界面）
+      splashScreenDuration: 0, //启动界面持续时间（值为0时为不显示启动界面）
       initialScreen: 0, //启动界面推出后的初始显示界面，[0: 登陆界面, 1: 注册界面, 2: 验证码界面（仅供调试）]
       splashScreenAnimation: "animate__animated animate__fadeIn", //启动界面动效
       showSplashScreen: "", //控制启动界面显示隐藏
