@@ -70,7 +70,7 @@ export default {
     },
   },
   watch: {
-    flowList: function() {
+    flowList: function () {
       this.dataList = this.flowList;
       // console.log("workwater获取到的数据:");
       // console.table(this.dataList);

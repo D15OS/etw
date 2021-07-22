@@ -11,7 +11,7 @@ export const getTrendList = (query) =>
   apiResquest("mockApi/trendsList", { method: "GET", query });
 //登录
 export const loginTest = (query) =>
-  apiResquest("/api/login", { method: "POST", query });
+  apiResquest(`/api/login`, { method: "POST", query });
 //注册
 export const registerTest = (query) =>
   apiResquest("/api/user/register", { method: "POST", query });

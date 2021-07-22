@@ -6,19 +6,22 @@
  **/
 class Validator {
   //class类必需的构造函数
-  constructor() {}
+  constructor() { }
   //验证方法
   validate(data, rules) {
-    let errors = {}; //存放验证错误信息
+    let validatedInfo = {}; //存放验证错误信息
     //遍历数组中每个数据对应的每个规则对象
     rules.forEach((rule) => {
       let value = data[rule.key]; //获取这个规则验证的数据
       //是否必需
       if (rule.required) {
         let error = this.required(value);
-        if (error) {
-          this.setDefaultObj(errors, rule.key);
-          errors[rule.key] = error;
+        if (error.required) {
+          this.setDefaultObj(validatedInfo, rule.key);
+          validatedInfo[rule.key] = error;
+        } else {
+          this.setDefaultObj(validatedInfo, rule.key);
+          validatedInfo[rule.key] = error;
           return;
         }
       }
@@ -30,17 +33,20 @@ class Validator {
       restKeys.forEach((restKey) => {
         if (this[restKey]) {
           let error = this[restKey](value, rule[restKey]);
-          if (error && error.length !== 0) {
-            this.setDefaultObj(errors, rule.key);
-            errors[rule.key][restKey] = error;
-          }
+          // if (error && error.length !== 0) {
+          //   this.setDefaultObj(validatedInfo, rule.key);
+          //   validatedInfo[rule.key][restKey] = error;
+          // }  
+          this.setDefaultObj(validatedInfo, rule.key);
+          validatedInfo[rule.key][restKey] = error;
+
         } else {
           throw `${restKey} 规则不存在`;
         }
       });
     });
-    if (Object.keys(errors).length > 0) {
-      return errors;
+    if (Object.keys(validatedInfo).length > 0) {
+      return validatedInfo;
     } else {
       return true;
     }
@@ -49,7 +55,17 @@ class Validator {
   //必填
   required(value) {
     if (!value && value !== 0) {
-      return "必填";
+      return { "required": false };
+    } else {
+      return { "required": true };
+    }
+  }
+  //最小长度
+  minLength(value, l) {
+    if (value.length <= l) {
+      return { "minLength": true }
+    } else {
+      return { "minLength": false }
     }
   }
   //正则表达式

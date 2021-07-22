@@ -36,21 +36,19 @@ export const apiResquest = (url, prams) => {
       header: headerData,
       success: (res) => {
         uni.hideLoading();
+        console.log(res);
         if (res.data.errorCode !== 200) {
-          uni.showToast({
-            title: "获取数据失败:" + res.errorMsg,
-            duration: 1000,
-            icon: "none",
-          });
+          resolve(res.data);
           return;
         }
         // 延时请求
-        setTimeout(function() {
-          resolve(res.data);
-        }, 1000);
-        // resolve(res.data);
+        // setTimeout(function () {
+        //   resolve(res.data);
+        // }, 1000);
+        resolve(res.data);
       },
       fail: (err) => {
+        console.log(err);
         reject(err);
         uni.hideLoading();
       },
