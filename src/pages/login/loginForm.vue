@@ -63,7 +63,7 @@
     <!-- E 下方按钮区域 -->
     <toast ref="toast" />
     <mask :isShow="isShow" @click="isShow = false">
-      <tfgg-verify></tfgg-verify>
+      <imageVerify></imageVerify>
     </mask>
   </view>
 </template>

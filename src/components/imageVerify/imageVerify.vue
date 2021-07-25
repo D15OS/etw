@@ -1,10 +1,6 @@
 <template>
   <view>
-    <view
-      class="verifyContainer"
-      @touchend="onEnd"
-      @tap.stop=""
-    >
+    <view class="verifyContainer" @touchend="onEnd" @tap.stop="">
       <view class="verifyTitleContainer">拖动下方滑块完成拼图</view>
       <view class="verifyImageContainer">
         <image :src="imgUrl" class="verifyImage"></image>
@@ -28,8 +24,8 @@
               ></image
             ></view>
           </movable-view>
+          <view class="slideway"></view>
         </movable-area>
-        <view class="slideway"></view>
       </view>
     </view>
   </view>
@@ -147,6 +143,7 @@ $movableAreaContainerHeight: 55rpx;
   height: $movableAreaContainerHeight;
   width: 100%;
   display: flex;
+  align-items: center;
 }
 .movableAreaContainer movable-area movable-view {
   width: $imageGapWH;
@@ -188,17 +185,9 @@ $movableAreaContainerHeight: 55rpx;
   position: absolute;
   width: 100%;
   height: 30rpx;
-  line-height: 30rpx;
-  background: #eee;
-  box-shadow: inset 0 0 5rpx #ccc;
+  background: rgb(224, 224, 224);
   border-radius: 60rpx;
-  color: rgb(114, 114, 114);
-  text-align: right;
-  top: 50%;
   right: 0;
-  transform: translateY(-50%);
-  font-size: 36rpx;
-  padding-right: 35rpx;
   z-index: 100;
 }
 </style>

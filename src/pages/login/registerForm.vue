@@ -80,10 +80,13 @@
       </view>
     </view>
     <!-- E 下方按钮区域 -->
+    <toast ref="toast" />
   </view>
 </template>
 
 <script>
+import { Validator } from "../../common/js/validate/validate.js";
+
 export default {
   data() {
     return {
@@ -208,29 +211,81 @@ export default {
      * 注册检查
      */
     registerCheck() {
-      this.isEmailInput === true
-        ? (this.$parent.username = this.email)
-        : this.phone;
-      this.$parent.password = this.password;
-      if (this.$parent.username !== "" && this.$parent.password !== "") {
-        this.$parent.$refs["captchaForm"].captchaUsername =
-          this.$parent.username;
-        this.isEmailInput === true
-          ? (this.$parent.$refs["captchaForm"].captchaUsernameType = 1)
-          : (this.$parent.$refs["captchaForm"].captchaUsernameType = 0);
-        this.$parent.$refs["navigationBar"].setNavigation(
-          true,
-          true,
-          "注册",
-          this.$parent.toRegisterScreen
-        );
-        this.$parent.toCaptchaScreen();
+      let data, rules;
+      if (this.isEmailInput) {
+        data = {
+          username: this.email,
+          password: this.password,
+        };
+        rules = [
+          {
+            key: "username",
+            regExp: ["email"],
+            required: true,
+          },
+          {
+            key: "password",
+            required: true,
+          },
+        ];
       } else {
-        wx.showToast({
-          title: "请正确填写信息",
-          icon: "error",
-          duration: 2000,
-        });
+        data = {
+          username: this.phone,
+          password: this.password,
+        };
+        rules = [
+          {
+            key: "username",
+            regExp: ["phone"],
+            required: true,
+          },
+          {
+            key: "password",
+            required: true,
+          },
+        ];
+      }
+      let validator = new Validator();
+      let validatedInfo = validator.validate(data, rules);
+      let [usernameValidatedInfo, passwordValidatedInfo] = [
+        validatedInfo.username,
+        validatedInfo.password,
+      ];
+      if (usernameValidatedInfo.required && passwordValidatedInfo.required) {
+        console.log(usernameValidatedInfo);
+        if (usernameValidatedInfo.regExp.length === 0) {
+          if (this.isEmailInput === true) {
+            this.$parent.$refs["captchaForm"].captchaUsername = this.email;
+            this.$parent.$refs["captchaForm"].captchaUsernameType = 1;
+          } else {
+            this.$parent.$refs["captchaForm"].captchaUsername = this.phone;
+            this.$parent.$refs["captchaForm"].captchaUsernameType = 0;
+          }
+          this.$parent.$refs["navigationBar"].setNavigation(
+            true,
+            true,
+            "注册",
+            this.$parent.toRegisterScreen
+          );
+          this.$parent.toCaptchaScreen();
+        } else {
+          this.$refs.toast.show({
+            text: "邮箱/手机格式错误",
+            type: "warning",
+          });
+        }
+      } else {
+        if (!usernameValidatedInfo.required) {
+          this.$refs.toast.show({
+            text: "必须填写邮箱/手机",
+            type: "warning",
+          });
+        } else if (!passwordValidatedInfo.required) {
+          this.$refs.toast.show({
+            text: "必须填写密码",
+            type: "warning",
+          });
+        }
       }
     },
     /**
