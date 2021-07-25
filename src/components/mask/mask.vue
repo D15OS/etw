@@ -2,61 +2,28 @@
   <view
     class="u-mask"
     hover-stop-propagation
-    :style="[maskStyle, zoomStyle]"
-    @tap="click"
+    @tap.stop="click"
     @touchmove.stop.prevent="() => {}"
-    :class="{
-      'u-mask-zoom': zoom,
-      'u-mask-show': show,
-    }"
+    :class="[maskShowClass, isShow ? maskAnimationStart : maskAnimationEnd]"
+    :style="{ animationDuration: `${duration}ms` }"
   >
     <slot />
   </view>
 </template>
 
 <script>
-/**
- * mask 遮罩
- * @description 创建一个遮罩层，用于强调特定的页面元素，并阻止用户对遮罩下层的内容进行操作，一般用于弹窗场景
- * @tutorial https://www.uviewui.com/components/mask.html
- * @property {Boolean} show 是否显示遮罩（默认false）
- * @property {String Number} z-index z-index 层级（默认1070）
- * @property {Object} custom-style 自定义样式对象，见上方说明
- * @property {String Number} duration 动画时长，单位毫秒（默认300）
- * @property {Boolean} zoom 是否使用scale对遮罩进行缩放（默认true）
- * @property {Boolean} mask-click-able 遮罩是否可点击，为false时点击不会发送click事件（默认true）
- * @event {Function} click mask-click-able为true时，点击遮罩发送此事件
- * @example <u-mask :show="show" @click="show = false"></u-mask>
- */
 export default {
   name: "mask",
   props: {
     // 是否显示遮罩
-    show: {
+    isShow: {
       type: Boolean,
       default: false,
     },
-    // 层级z-index
-    zIndex: {
-      type: [Number, String],
-      default: "",
-    },
-    // 用户自定义样式
-    customStyle: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-    // 遮罩的动画样式， 是否使用使用zoom进行scale进行缩放
-    zoom: {
-      type: Boolean,
-      default: true,
-    },
-    // 遮罩的过渡时间，单位为ms
+    // 遮罩的过渡时间
     duration: {
       type: [Number, String],
-      default: 300,
+      default: 500,
     },
     // 是否可以通过点击遮罩进行关闭
     maskClickAble: {
@@ -66,53 +33,43 @@ export default {
   },
   data() {
     return {
-      zoomStyle: {
-        transform: "",
-      },
-      scale: "scale(1.2, 1.2)",
+      maskShowClass: "", //遮罩显示
+      maskAnimationStart: "", //遮罩过渡动画开始
+      maskAnimationEnd: "", //遮罩过渡动画结束
     };
   },
   watch: {
-    show(n) {
-      if (n && this.zoom) {
-        // 当展示遮罩的时候，设置scale为1，达到缩小(原来为1.2)的效果
-        this.zoomStyle.transform = "scale(1, 1)";
-      } else if (!n && this.zoom) {
-        // 当隐藏遮罩的时候，设置scale为1.2，达到放大(因为显示遮罩时已重置为1)的效果
-        this.zoomStyle.transform = this.scale;
+    isShow(n) {
+      if (n) {
+        this.maskAnimationStart = "animate__animated animate__fadeIn";
+        this.maskShowClass = "u-mask-show";
+      } else {
+        this.maskAnimationEnd = "animate__animated animate__fadeOut";
+        setTimeout(() => {
+          this.maskShowClass = "mask-diable-show";
+        }, this.duration);
       }
-    },
-  },
-  computed: {
-    maskStyle() {
-      let style = {};
-      style.backgroundColor = "rgba(0, 0, 0, 0.6)";
-      if (this.show)
-        style.zIndex = this.zIndex ? this.zIndex : this.$u.zIndex.mask;
-      else style.zIndex = -1;
-      style.transition = `all ${this.duration / 1000}s ease-in-out`;
-      // 判断用户传递的对象是否为空，不为空就进行合并
-      if (Object.keys(this.customStyle).length)
-        style = {
-          ...style,
-          ...this.customStyle,
-        };
-      return style;
     },
   },
   methods: {
     click() {
-      if (!this.maskClickAble) return;
-      this.$emit("click");
+      if (!this.maskClickAble) {
+        return;
+      } else {
+        this.$emit("click");
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .u-mask {
+  background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
+  display: none;
+  width: 100vw;
+  height: 100vh;
   top: 0;
   left: 0;
   right: 0;
@@ -122,10 +79,12 @@ export default {
 }
 
 .u-mask-show {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   opacity: 1;
 }
-
-.u-mask-zoom {
-  transform: scale(1.2, 1.2);
+.mask-diable-show {
+  display: none;
 }
 </style>

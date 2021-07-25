@@ -50,15 +50,11 @@
       </view>
     </view>
     <!-- E 下方按钮区域 -->
-    <toast ref="toast" />
   </view>
 </template>
 
 <script>
-import { registerTest, getEmailCode } from "../../common/js/api/models.js";
-import { Validator } from "../../common/js/validate/validate.js";
 export default {
-  name: "captchaForm",
   data() {
     return {
       showCaptchaForm: "none", //控制注册窗体显示隐藏
@@ -89,29 +85,16 @@ export default {
       if (this.captchaUsername === "") {
         this.$parent.toRegisterScreen();
       } else {
-      setTimeout(() => {
-        switch (this.captchaUsernameType) {
-          case 0:
-            break;
-          case 1:
-            getEmailCode({ email: this.captchaUsername })
-              .then((res) => {
-                console.log(res);
-                this.$refs.toast.show({
-                  title: "已发送验证码",
-                  type: "success",
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          default:
-            break;
-        }
-        this.captchaResendDelay = this.captchaResendInterval;
-        this.computeCaptchaResendDelay();
-      }, 100);
-    }
+        setTimeout(() => {
+          wx.showToast({
+            title: "已发送验证码",
+            icon: "success",
+            duration: 2000,
+          });
+          this.captchaResendDelay = this.captchaResendInterval;
+          this.computeCaptchaResendDelay();
+        }, 100);
+      }
     },
     /**
      * 计算重新发送验证码的剩余时间
@@ -129,24 +112,11 @@ export default {
      */
     resendCaptcha() {
       if (this.captchaResendDelay === 0) {
-        switch (this.captchaUsernameType) {
-          case 0:
-            break;
-          case 1:
-            getEmailCode({ email: this.captchaUsername })
-              .then((res) => {
-                console.log(res);
-                this.$refs.toast.show({
-                  title: "已发送验证码",
-                  type: "success",
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          default:
-            break;
-        }
+        wx.showToast({
+          title: "已发送验证码",
+          icon: "success",
+          duration: 2000,
+        });
         [this.captchaInputShowValue, this.captchaRawInputValue] = [[], ""]; //重置验证码输入的值
         this.captchaResendDelay = this.captchaResendInterval; //重置重新发送验证码的剩余时间
         this.computeCaptchaResendDelay(); //开始计算重新发送验证码的剩余时间
@@ -182,28 +152,17 @@ export default {
      * 注册前检查
      */
     registerCheck() {
-      if (this.captchaRawInputValue.length === 6) {
-        registerTest({
-          email: this.$parent.username,
-          password: this.$parent.password,
-          code: this.captchaRawInputValue,
-        })
-          .then((res) => {
-            console.log(res);
-            this.$refs.toast.show({
-              title: "注册成功",
-              type: "success",
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        this.$refs.toast.show({
-          title: "验证码格式错误",
-          type: "error",
-        });
-      }
+      wx.showModal({
+        title: "注册信息",
+        content: `用户名：${this.$parent.username}，密码：${this.$parent.password}`,
+        success(res) {
+          if (res.confirm) {
+            // confirm
+          } else if (res.cancel) {
+            // cancel
+          }
+        },
+      });
     },
   },
   mounted() {},

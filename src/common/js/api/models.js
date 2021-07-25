@@ -6,26 +6,29 @@ let baseUrl = "/api"
 let baseUrl = "http://us-or-cera-1.natfrp.cloud:21671"
 //#endif
 // 获取作品列表
-export const getWorkList = (query) =>
-  apiResquest("mockApi/test", { method: "GET", query });
+export const getWorkList = (requestConfig) =>
+  apiResquest("mockApi/test", { method: "GET", requestConfig });
 // 获取常看作者
-export const getAuthorList = (query) =>
-  apiResquest("mockApi/authorList", { method: "GET", query });
+export const getAuthorList = (requestConfig) =>
+  apiResquest("mockApi/authorList", { method: "GET", requestConfig });
 // 获取动态列表
-export const getTrendList = (query) =>
-  apiResquest("mockApi/trendsList", { method: "GET", query });
+export const getTrendList = (requestConfig) =>
+  apiResquest("mockApi/trendsList", { method: "GET", requestConfig });
 //登录
-export const loginTest = (query) =>
-  apiResquest(`${baseUrl}/login`, { method: "POST", query });
+export const loginTest = (requestConfig) =>
+  apiResquest(`${baseUrl}/login`, { method: "POST", requestConfig });
 //注册
-export const registerTest = (query) =>
-  apiResquest(`${baseUrl}/user/register`, { method: "POST", query });
+export const registerTest = (requestConfig) =>
+  apiResquest(`${baseUrl}/user/register`, { method: "POST", requestConfig });
 //获取验证码
-export const getEmailCode = (query) =>
-  apiResquest(`${baseUrl}/user/email/verification`, { method: "GET", query });
+export const getEmailCode = (requestConfig) =>
+  apiResquest(`${baseUrl}/user/email/verification`, { method: "GET", requestConfig });
 //获取用户
-export const getUser = (query) =>
-  apiResquest(`${baseUrl}/getUser`, { method: "GET", query });
+export const getUser = (requestConfig) =>
+  apiResquest(`${baseUrl}/getUser`, { method: "GET", requestConfig });
 //登出
-export const logout = (query) =>
-  apiResquest(`${baseUrl}/logout`, { method: "GET", query });
+export const logout = (requestConfig) =>
+  apiResquest(`${baseUrl}/logout`, { method: "GET", requestConfig });
+//获取目录上传签名
+export const getUploadSignature = (requestConfig) =>
+  apiResquest(`${baseUrl}/signature-oss/${requestConfig.urlParam}`, { method: "GET", requestConfig });

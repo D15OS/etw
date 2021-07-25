@@ -1,31 +1,38 @@
 <template>
-  <!-- <view class="zhezhao" v-if="isShow" @tap="isShow = false"> -->
   <view>
-    <!-- <view class="verifyBox" @touchend="onEnd">
-      <view class="pintuBox">
-        <image :src="imgUrl" class="pintuBg"></image>
+    <view
+      class="verifyContainer"
+      @touchend="onEnd"
+      @tap.stop=""
+    >
+      <view class="verifyTitleContainer">拖动下方滑块完成拼图</view>
+      <view class="verifyImageContainer">
+        <image :src="imgUrl" class="verifyImage"></image>
       </view>
-      <view class="huakuaiBox">
+      <view class="movableAreaContainer">
         <view
-          class="shadow"
-          :style="{ top: top + 'px', left: left + 'px' }"
+          class="imageGapShadow"
+          :style="{ top: top + 'rpx', left: left + 'rpx' }"
         ></view>
         <movable-area :animation="true">
-          <movable-view :x="x" direction="horizontal" @change="onMove">
-            <view class="pintukuai" :style="{ top: top + 'px' }"
+          <movable-view
+            :x="movableViewX"
+            direction="horizontal"
+            @change="onMove"
+          >
+            <text class="fa fa-lg fa-arrow-right"></text>
+            <view class="imageGap" :style="{ top: top + 'rpx' }"
               ><image
                 :src="imgUrl"
-                :style="{ top: -lefttop + 'px', left: -left + 'px' }"
+                :style="{ top: -imageGapTop + 'rpx', left: -left + 'rpx' }"
               ></image
             ></view>
           </movable-view>
         </movable-area>
-        <view class="huadao">拖动左边滑块完成上方拼图</view>
+        <view class="slideway"></view>
       </view>
-    </view> -->
+    </view>
   </view>
-
-  <!-- </view> -->
 </template>
 
 <script>
@@ -34,12 +41,11 @@ export default {
   data() {
     return {
       imgUrl: "../../static/images/imgVerifyTest/2.jpg",
-      x: 0, //初始距离
-      oldx: 0, //移动的距离
-      img: "0", //显示哪张图片
-      left: "", //随机拼图的最终X轴距离
+      movableViewX: 0, //初始距离
+      movedX: 0, //已移动的距离
+      left: "", //拼图的最终X轴距离
       top: "", //拼图的top距离
-      lefttop: "", //拼图内容的top距离
+      imageGapTop: "", //拼图内容的top距离
       isShow: false,
     };
   },
@@ -47,38 +53,31 @@ export default {
     this.shuaxinVerify();
   },
   methods: {
+    //将px转换rpx
+    px2rpx(px) {
+      let rpx;
+      uni.getSystemInfo({
+        success: function (res) {
+          rpx = px * (750 / res.windowWidth);
+        },
+      });
+      return rpx;
+    },
     //刷新验证
     shuaxinVerify() {
-      var gl = Math.random();
-      this.left =
-        uni.upx2px(500) * gl > uni.upx2px(250)
-          ? uni.upx2px(500) * gl
-          : uni.upx2px(250); //生成随机X轴最终距离
-      this.top = -(uni.upx2px(25) + uni.upx2px(343) - uni.upx2px(263) * gl); //生成随机Y轴初始距离
-      this.lefttop = uni.upx2px(263) * gl; //生成随机Y轴初始距离
-      if (gl <= 0.2) {
-        this.img = 1;
-      }
-      if (gl > 0.2 && gl <= 0.4) {
-        this.img = 2;
-      }
-      if (gl > 0.4 && gl <= 0.6) {
-        this.img = 3;
-      }
-      if (gl > 0.6 && gl <= 0.8) {
-        this.img = 4;
-      }
-      if (gl > 0.8 && gl <= 1) {
-        this.img = 5;
-      }
+      this.left = 604 - 100; //生成随机X轴最终距离
+      this.top = -150; //生成随机Y轴初始距离
+      this.imageGapTop = 343 + 40 - 17 + this.top; //生成随机Y轴初始距离
     },
     /* 滑动中 */
     onMove(e) {
-      this.oldx = e.detail.x;
+      this.movedX = e.detail.x;
     },
     /* 滑动结束 */
     onEnd() {
-      if (Math.abs(this.oldx - this.left) <= 5) {
+      this.movedX = this.px2rpx(this.movedX);
+      console.log(this.movedX);
+      if (Math.abs(this.movedX - this.left) <= 5) {
         uni.showToast({
           title: "验证成功",
         });
@@ -95,11 +94,11 @@ export default {
     /* 重置 */
     reset() {
       console.log("重置");
-      this.x = 1;
-      this.oldx = 1;
+      this.movableViewX = 1;
+      this.movedX = 1;
       setTimeout(() => {
-        this.x = 0;
-        this.oldx = 0;
+        this.movableViewX = 0;
+        this.movedX = 0;
       }, 300);
     },
     show() {
@@ -112,96 +111,94 @@ export default {
 };
 </script>
 
-<style scoped>
-.zhezhao {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-.verifyBox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85%;
+<style lang="scss" scoped>
+$verifyImageWidth: 604rpx;
+$verifyimageheight: 343rpx;
+$imageGapWH: 100rpx;
+$movableAreaContainerHeight: 55rpx;
+.verifyContainer {
+  padding: 20rpx;
+  width: $verifyImageWidth + 40rpx;
   background-color: #fff;
-  border-radius: 20upx;
-  box-shadow: 0 0 5upx rgba(0, 0, 0);
+  border-radius: 20rpx;
+  box-shadow: 0 0 5rpx #000;
 }
-.pintuBox {
+.verifyTitleContainer {
+  font-size: 36rpx;
+  font-weight: 400;
+  margin-bottom: 25rpx;
+}
+.verifyImageContainer {
   position: relative;
 }
-.pintuBg {
-  width: 610upx;
-  height: 343upx;
+.verifyImage {
+  width: $verifyImageWidth;
+  height: $verifyimageheight;
   display: block;
-  margin: 17upx auto;
 }
-.huakuaiBox {
+.movableAreaContainer {
   position: relative;
-  height: 80upx;
-  width: 610upx;
-  margin: 25upx auto;
+  height: $movableAreaContainerHeight;
+  width: $verifyImageWidth;
+  margin: 25rpx auto;
 }
-.shadow {
+
+.movableAreaContainer movable-area {
+  height: $movableAreaContainerHeight;
+  width: 100%;
+  display: flex;
+}
+.movableAreaContainer movable-area movable-view {
+  width: $imageGapWH;
+  height: $movableAreaContainerHeight;
+  border-radius: 40rpx;
+  background-color: $uni-color-primary;
+  color: #fff;
+  box-shadow: 0px 0px 10px 1px rgb(252, 175, 170);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 101;
+}
+.imageGapShadow {
   position: absolute;
-  width: 80upx;
-  height: 80upx;
+  width: $imageGapWH;
+  height: $imageGapWH;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.huakuaiBox movable-area {
-  height: 80upx;
-  width: 100%;
-}
-.huakuaiBox movable-area movable-view {
-  width: 80upx;
-  height: 80upx;
-  border-radius: 50%;
-  background-color: #007cff;
-  background-image: url(../../static/images/imgVerifyTest/icon-button-normal.png);
-  background-repeat: no-repeat;
-  background-size: auto 30upx;
-  background-position: center;
-  position: relative;
-  z-index: 100;
-}
-.pintukuai {
+.imageGap {
   position: absolute;
-  top: -105upx;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 101;
-  box-shadow: 0 0 5upx rgba(0, 0, 0, 0.3);
+  width: $imageGapWH;
+  height: $imageGapWH;
+  box-shadow: 0 0 5rpx rgba(0, 0, 0, 0.3);
   overflow: hidden;
+  z-index: 101;
 }
-.pintukuai image {
+.imageGap image {
   max-width: none;
   position: absolute;
   top: 0;
   left: 0;
-  width: 610upx;
-  height: 343upx;
+  width: $verifyImageWidth;
+  height: $verifyimageheight;
 }
-.huadao {
+.slideway {
   position: absolute;
-  width: calc(100% - 35upx);
-  height: 65upx;
-  line-height: 65upx;
+  width: 100%;
+  height: 30rpx;
+  line-height: 30rpx;
   background: #eee;
-  box-shadow: inset 0 0 5upx #ccc;
-  border-radius: 60upx;
-  color: #999;
+  box-shadow: inset 0 0 5rpx #ccc;
+  border-radius: 60rpx;
+  color: rgb(114, 114, 114);
   text-align: right;
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  font-size: 36upx;
-  padding-right: 35upx;
-  z-index: 99;
+  font-size: 36rpx;
+  padding-right: 35rpx;
+  z-index: 100;
 }
 </style>

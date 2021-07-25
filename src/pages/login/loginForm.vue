@@ -9,9 +9,9 @@
     <!-- S 输入框区域 -->
     <view class="input-area">
       <view class="username-container" :class="usernameContainerStyle">
-        <view class="input-placeholder" :class="usernamePlaceholderStyle"
-          >电子邮箱 / 手机</view
-        >
+        <view class="input-placeholder" :class="usernamePlaceholderStyle">
+          电子邮箱 / 手机
+        </view>
         <input
           type="text"
           class="username-input"
@@ -25,9 +25,9 @@
         />
       </view>
       <view class="password-container" :class="passwordContainerStyle">
-        <view class="input-placeholder" :class="passwordPlaceholderStyle"
-          >密码</view
-        >
+        <view class="input-placeholder" :class="passwordPlaceholderStyle">
+          密码
+        </view>
         <input
           type="password"
           class="password-input"
@@ -62,12 +62,16 @@
     </view>
     <!-- E 下方按钮区域 -->
     <toast ref="toast" />
+    <mask :isShow="isShow" @click="isShow = false">
+      <tfgg-verify></tfgg-verify>
+    </mask>
   </view>
 </template>
 
 <script>
 import { loginTest } from "../../common/js/api/models.js";
 import { Validator } from "../../common/js/validate/validate.js";
+
 export default {
   data() {
     return {
@@ -81,13 +85,14 @@ export default {
       passwordFocusState: false, //密码输入框焦点状态
       username: "", //用户名输入框中的值
       password: "", //密码输入框中的值
+      isShow: false,
     };
   },
   onLoad() {},
   watch: {
     showLoginForm(nval, oval) {
       if (nval === "") {
-        this.$parent.$refs["navigationBar"].setNavigation(true, true, "登录");
+        this.$parent.$refs.navigationBar.setNavigation(true, true, "登录");
       }
     },
   },
@@ -178,76 +183,86 @@ export default {
      */
     forgetPassword() {
       //Forget Password
+      this.$refs.toast.show({
+        text: "你怎么这么傻能忘记密码",
+        type: "error",
+      });
     },
     /**
      * 登录检查
      */
     loginCheck() {
-      this.$parent.username = this.username;
-      this.$parent.password = this.password;
-      let data = {
-        username: this.username,
-        password: this.password,
-      };
-      // 验证规则
-      let rules = [
-        {
-          key: "username",
-          regExp: ["email", "phone"],
-          required: true,
-        },
-        {
-          key: "password",
-          required: true,
-        },
-      ];
-      let validator = new Validator();
-      let validatedInfo = validator.validate(data, rules);
-      console.log("验证信息", validatedInfo);
-      let [usernameValidatedInfo, passwordValidatedInfo] = [
-        validatedInfo.username,
-        validatedInfo.password,
-      ];
-      //判断是否经过邮箱/手机格式验证
-      if (usernameValidatedInfo.required && passwordValidatedInfo.required) {
-        if (usernameValidatedInfo.regExp.length < 2) {
-          loginTest({ username: this.username, password: this.password })
-            .then((res) => {
-              console.log(res);
-              if (res.success) {
-                this.$refs.toast.show({
-                  title: res.data,
-                  type: "success",
-                });
-              } else {
-                this.$refs.toast.show({
-                  title: res.errorMsg,
-                  type: "error",
-                });
-              }
+      this.utils.throttle(() => {
+        this.$parent.username = this.username;
+        this.$parent.password = this.password;
+        let data = {
+          username: this.username,
+          password: this.password,
+        };
+        // 验证规则
+        let rules = [
+          {
+            key: "username",
+            regExp: ["email", "phone"],
+            required: true,
+          },
+          {
+            key: "password",
+            required: true,
+          },
+        ];
+        let validator = new Validator();
+        let validatedInfo = validator.validate(data, rules);
+        console.log("验证信息", validatedInfo);
+        let [usernameValidatedInfo, passwordValidatedInfo] = [
+          validatedInfo.username,
+          validatedInfo.password,
+        ];
+        //判断是否经过邮箱/手机格式验证
+        if (usernameValidatedInfo.required && passwordValidatedInfo.required) {
+          if (usernameValidatedInfo.regExp.length < 2) {
+            loginTest({
+              queryData: {
+                username: this.username,
+                password: this.password,
+              },
             })
-            .catch((err) => {
-              console.log(err);
+              .then((res) => {
+                if (res.success) {
+                  this.$refs.toast.show({
+                    text: res.data,
+                    type: "success",
+                  });
+                } else {
+                  this.$refs.toast.show({
+                    text: res.errorMsg,
+                    type: "error",
+                  });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else if (usernameValidatedInfo.regExp.length >= 2) {
+            this.$refs.toast.show({
+              text: "邮箱/手机格式错误",
+              type: "warning",
             });
-        } else if (usernameValidatedInfo.regExp.length >= 2) {
-          this.$refs.toast.show({
-            title: "邮箱/手机格式错误",
-            type: "warning",
-          });
+          }
+        } else {
+          if (!usernameValidatedInfo.required) {
+            this.$refs.toast.show({
+              text: "必须填写邮箱/手机",
+              type: "warning",
+            });
+          } else if (!passwordValidatedInfo.required) {
+            this.$refs.toast.show({
+              text: "必须填写密码",
+              type: "warning",
+            });
+          }
         }
-      } else {
-        if (!usernameValidatedInfo.required) {
-          this.$refs.toast.show({
-            title: "必须填写邮箱/手机",
-            type: "warning",
-          });
-        } else if (!passwordValidatedInfo.required) {
-          this.$refs.toast.show({
-            title: "必须填写密码",
-            type: "warning",
-          });
-        }
-      }
+      }, 2500);
     },
     /**
      * 立即注册按钮触发事件
@@ -259,7 +274,7 @@ export default {
         this.usernamePlaceholderStyle,
         this.passwordPlaceholderStyle,
       ] = ["", "", "", ""]; //还原输入区域样式
-      this.$parent.$refs["navigationBar"].setNavigation(
+      this.$parent.$refs.navigationBar.setNavigation(
         true,
         true,
         "注册",
@@ -272,6 +287,16 @@ export default {
      */
     wechatLogin() {
       //Wechat Login
+      // this.$refs.toast.show({
+      //     text: '大笨蛋还想用微信登陆',
+      //     type: "success",
+      //     direction: 'left'
+      // });
+
+      // this.isShow = true;
+      uni.navigateTo({
+        url: "/pages/home/subpages/upload-file",
+      });
     },
   },
   mounted() {},
