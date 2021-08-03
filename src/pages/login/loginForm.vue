@@ -294,8 +294,11 @@ export default {
       // });
 
       // this.isShow = true;
+      // uni.navigateTo({
+      //   url: "/pages/home/subpages/upload-file",
+      // });
       uni.navigateTo({
-        url: "/pages/home/subpages/upload-file",
+        url: "/pages/trending/subpages/trendPostPage",
       });
     },
   },

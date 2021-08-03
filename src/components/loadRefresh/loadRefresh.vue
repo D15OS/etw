@@ -38,7 +38,7 @@
           </view>
         </view>
         <!-- 数据集插槽 -->
-        <slot name="content-list"></slot>
+        <slot></slot>
         <!-- 上拉加载 -->
         <view v-show="isShowLoadText" class="load-more">{{ loadText }}</view>
       </scroll-view>
@@ -60,7 +60,7 @@ export default {
     },
     fixedHeight: {
       type: String,
-      default: "0",
+      default: null,
     },
     heightReduce: {
       type: String,
@@ -78,7 +78,11 @@ export default {
       type: Number,
       default: 0,
     },
-    totalPages: {
+    totalNumber: {
+      type: Number,
+      default: 0,
+    },
+    pageSize: {
       type: Number,
       default: 0,
     },
@@ -102,18 +106,17 @@ export default {
     // 计算组件所占屏幕高度
     getHeight() {
       // rpx = px / uni.getSystemInfoSync().windowWidth * 750
-      if (Number(this.fixedHeight)) {
-        return `height: ${this.fixedHeight}rpx;`;
+      if (this.fixedHeight) {
+        return `height: ${this.fixedHeight};`;
       } else {
-        let height =
-          uni.getSystemInfoSync().windowHeight -
-          uni.upx2px(0 + this.heightReduce);
+        let height = uni.getSystemInfoSync().windowHeight - this.heightReduce;
         return `height: ${height}px;`;
       }
     },
     // 判断loadText，可以根据需求自定义
     loadText() {
-      const { currentPage, totalPages, updating, updateType } = this;
+      const { currentPage, totalNumber, pageSize, updating, updateType } = this;
+      let totalPages = this.utils.getTotalPages(totalNumber, pageSize);
       if (!updateType && updating) {
         return "加载中...";
       } else if (currentPage < totalPages) {
@@ -124,10 +127,11 @@ export default {
     },
   },
   methods: {
-    // 根据currentPage和totalPages的值来判断 是否触发@loadMore
+    // 根据currentPage和totalNumber的值来判断 是否触发@loadMore
     loadMore() {
       this.isShowLoadText = true;
-      const { currentPage, totalPages } = this;
+      const { currentPage, totalNumber, pageSize } = this;
+      let totalPages = this.utils.getTotalPages(totalNumber, pageSize);
       if (!this.updating && currentPage <= totalPages) {
         // console.log(this.updating);
         this.updating = true;

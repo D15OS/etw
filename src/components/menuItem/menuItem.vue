@@ -48,7 +48,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .item-box {
   display: flex;
   flex-direction: column;
@@ -67,8 +67,6 @@ export default {
         margin-left: 10rpx;
         text-align: center;
       }
-    }
-    .item-right {
     }
   }
 }

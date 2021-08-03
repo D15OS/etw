@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { navigationBar } from "../../components/navigationBar/navigationBar.vue";
+import { navigationBar } from "@/components/navigationBar/navigationBar.vue";
 import { loginForm } from "./loginForm.vue";
 import { registerForm } from "./registerForm.vue";
 import { captchaForm } from "./captchaForm.vue";

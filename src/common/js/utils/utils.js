@@ -38,5 +38,23 @@ export class Utils {
 			}, this.debounceGapTime);
 		})();
 	}
+	/**
+	* 总页数
+	*@param（总条数，每页总条数）
+	*/
+	getTotalPages(total, pageSize) {
+		if (!total) {
+			return 0;
+		} else {
+			if (pageSize != 0 &&
+				total % pageSize == 0) {
+				return parseInt(total / pageSize);
+			}
+			if (pageSize != 0 &&
+				total % pageSize != 0) {
+				return parseInt(total / pageSize) + 1;
+			}
+		}
+	}
 }
 

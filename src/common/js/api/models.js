@@ -32,3 +32,18 @@ export const logout = (requestConfig) =>
 //获取目录上传签名
 export const getUploadSignature = (requestConfig) =>
   apiResquest(`${baseUrl}/signature-oss/${requestConfig.urlParam}`, { method: "GET", requestConfig });
+//发布动态
+export const postTrend = (requestConfig) =>
+  apiResquest(`${baseUrl}/dynamic`, { method: "POST", requestConfig });
+//获取我的动态
+export const getMyTrend = (requestConfig) =>
+  apiResquest(`${baseUrl}/dynamic`, { method: "GET", requestConfig });
+//点赞
+export const like = (requestConfig) =>
+  apiResquest(`${baseUrl}/like/${requestConfig.urlParam}`, { method: "POST", requestConfig });
+//发布动态评论
+export const postTrendComment = (requestConfig) =>
+  apiResquest(`${baseUrl}/dynamic/${requestConfig.urlParam}/comment`, { method: "POST", requestConfig });
+//获取动态评论
+export const getTrendComment = (requestConfig) =>
+  apiResquest(`${baseUrl}/dynamic/${requestConfig.urlParam}/comment`, { method: "GET", requestConfig });

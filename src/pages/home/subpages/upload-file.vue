@@ -43,11 +43,6 @@ export default {
           );
           // 目标目录
           let dir = "user-avatar";
-          let header = {};
-          let cookie = uni.getStorageSync("cookie");
-          if (cookie) {
-            header["cookie"] = cookie;
-          }
           getUploadSignature({ urlParam: dir })
             .then((res) => {
               let signData = res.data; // 拿到后端返回数据

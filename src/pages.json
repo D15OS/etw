@@ -12,7 +12,30 @@
         //     }
         // },
         {
+            "path": "pages/trending/trending",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
             "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+                "navigationStyle": "custom"
+            }
+        },
+        {
+            "path": "pages/trending/subpages/trendPostPage",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+                "navigationStyle": "custom"
+            }
+        },
+        {
+            "path": "pages/trending/subpages/trendDetailPage",
             "style": {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false,
@@ -36,20 +59,6 @@
         },
         {
             "path": "pages/testPage/testPage2",
-            "style": {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-        },
-        {
-            "path": "pages/trending/trending",
-            "style": {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-        },
-        {
-            "path": "pages/trending/subpages/trendPostPage",
             "style": {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false

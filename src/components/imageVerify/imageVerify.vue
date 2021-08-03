@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="verifyContainer" @touchend="onEnd" @tap.stop="">
+    <view class="verifyContainer" @tap.stop="">
       <view class="verifyTitleContainer">拖动下方滑块完成拼图</view>
       <view class="verifyImageContainer">
         <image :src="imgUrl" class="verifyImage"></image>
@@ -15,6 +15,7 @@
             :x="movableViewX"
             direction="horizontal"
             @change="onMove"
+            @touchend="onEnd"
           >
             <text class="fa fa-lg fa-arrow-right"></text>
             <view class="imageGap" :style="{ top: top + 'rpx' }"
@@ -32,13 +33,14 @@
 </template>
 
 <script>
+let movedX = 0;
 export default {
   name: "tfgg-verify",
   data() {
     return {
       imgUrl: "../../static/images/imgVerifyTest/2.jpg",
       movableViewX: 0, //初始距离
-      movedX: 0, //已移动的距离
+      // movedX: 0, //已移动的距离
       left: "", //拼图的最终X轴距离
       top: "", //拼图的top距离
       imageGapTop: "", //拼图内容的top距离
@@ -67,13 +69,14 @@ export default {
     },
     /* 滑动中 */
     onMove(e) {
-      this.movedX = e.detail.x;
+      movedX = e.detail.x;
     },
     /* 滑动结束 */
-    onEnd() {
-      this.movedX = this.px2rpx(this.movedX);
-      console.log(this.movedX);
-      if (Math.abs(this.movedX - this.left) <= 5) {
+    onEnd(e) {
+      console.log(e);
+      movedX = this.px2rpx(movedX);
+      console.log(movedX);
+      if (Math.abs(movedX - this.left) <= 5) {
         uni.showToast({
           title: "验证成功",
         });
@@ -91,10 +94,10 @@ export default {
     reset() {
       console.log("重置");
       this.movableViewX = 1;
-      this.movedX = 1;
+      movedX = 1;
       setTimeout(() => {
         this.movableViewX = 0;
-        this.movedX = 0;
+        movedX = 0;
       }, 300);
     },
     show() {

@@ -4,10 +4,15 @@ import App from './App'
 //uview
 import uView from "uview-ui";
 //mock.js
-import Mock from './common/js/mock';
+import Mock from '@/common/js/mock';
 //封装请求方法
-import { apiResquest } from "./common/js/api/request.js"
-import { Utils } from "./common/js/utils/utils.js"
+import { apiResquest } from "@/common/js/api/request.js"
+import { Utils } from "@/common/js/utils/utils.js"
+import * as filters from '@/common/js/utils/filters.js'
+
+
+//过滤器
+Object.keys(filters).forEach(key => { Vue.filter(key, filters[key]) })
 
 Vue.use(uView);
 Vue.config.productionTip = false

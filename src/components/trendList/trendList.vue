@@ -8,31 +8,48 @@
         <u-avatar></u-avatar>
         <view class="author-name-box">
           <!-- 用户名 -->
-          <view class="author-name">{{ item.authorName }}</view>
-          <view class="author-description">{{ item.authorDescription }}</view>
+          <view class="author-name">{{ item.userInfo.username }}</view>
+          <view class="author-description">{{
+            item.createdTime | dateFilter("yy-mm-dd hh:mm:ss")
+          }}</view>
         </view>
         <!-- 右侧按钮组 -->
-        <view class="button-group">
-          <button class="moreButton">
-            <u-icon name="more-dot-fill"></u-icon>
-          </button>
+        <view class="right-button-area">
+          <text class="fa fa-ellipsis-v fa-lg"></text>
         </view>
       </view>
       <!-- 动态文本 -->
-      <view class="trendText">
+      <view class="trend-text">
         <u-read-more color="#808080" close-text="展开" :toggle="true">
-          {{ item.trendText }}
+          {{ item.content }}
         </u-read-more>
       </view>
       <!-- 动态图片组 -->
-      <trendsImageGroup
-        v-bind:imageList="item.trendImageList"
-      ></trendsImageGroup>
+      <trendsImageGroup :imageDataList="item.dynamicImages"></trendsImageGroup>
+      <view class="bottom-button-area">
+        <!-- 转发 -->
+        <!-- <view>
+          <text class="fa fa-share-square-o fa-lg"></text>{{ item.shareNumber }}
+        </view> -->
+        <!-- 收藏 -->
+        <view>
+          <text class="fa fa-star-o fa-lg"></text>{{ item.browseNumber }}
+        </view>
+        <!-- 点赞 -->
+        <view @click="likeTrend(item.id)">
+          <text class="fa fa-heart-o fa-lg"></text>{{ item.likeNumber }}
+        </view>
+        <!-- 评论 -->
+        <view @click="toDetailPage(item)">
+          <text class="fa fa-commenting-o fa-lg"></text>{{ item.commentNumber }}
+        </view>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
+import { like } from "@/common/js/api/models.js";
 export default {
   name: "trendList",
   props: {
@@ -41,7 +58,29 @@ export default {
   data() {
     return {};
   },
-  created() {},
+  computed: {},
+  methods: {
+    likeTrend(id) {
+      like({
+        urlParam: id,
+        queryData: { actionType: 1, targetType: "2" },
+      }).then(() => {});
+    },
+    toDetailPage(trendData) {
+      uni.navigateTo({
+        url: "/pages/trending/subpages/trendDetailPage",
+        events: {
+          // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+          acceptDataFromOpenedPage: function (data) {
+          },
+        },
+        success: function (res) {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit("acceptDataFromOpenerPage", trendData);
+        },
+      });
+    },
+  },
 };
 </script>
 
@@ -54,43 +93,51 @@ export default {
 }
 .trend-box {
   padding: 6vw 4vw;
-}
-.author-box {
-  display: flex;
-  justify-content: flex-start;
-  height: 13vw;
-  width: 87vw;
-  .author-name-box {
-    margin-left: 2vw;
-    margin-right: auto;
-    width: 55vw;
-    .author-name {
-      @include ellipsis(1);
-      font-weight: bold;
-      font-size: 30rpx;
-      color: $uni-color-black;
-    }
-    .author-description {
-      @include ellipsis(1);
-      margin-top: 1vw;
-      font-weight: lighter;
-      font-size: 24rpx;
-      color: $uni-text-color-placeholder;
-    }
-  }
-  .button-group {
+  .author-box {
     display: flex;
-    align-items: center;
-    button::after {
-      border: none;
+    justify-content: flex-start;
+    height: 13vw;
+    width: 87vw;
+    .author-name-box {
+      margin-left: 2vw;
+      margin-right: auto;
+      width: 55vw;
+      .author-name {
+        @include ellipsis(1);
+        font-weight: bold;
+        font-size: 30rpx;
+        color: $uni-color-black;
+      }
+      .author-description {
+        @include ellipsis(1);
+        margin-top: 1vw;
+        font-weight: lighter;
+        font-size: 24rpx;
+        color: $uni-text-color-placeholder;
+      }
     }
-    .moreButton {
-      background-color: #ffffff;
+    .right-button-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50rpx;
     }
   }
+  .trend-text {
+    margin: 20rpx 0;
+  }
 }
-.trendText {
-  margin: 2vw 0;
-  padding: 0 1vw;
+
+.bottom-button-area {
+  margin-top: 30rpx;
+  display: flex;
+  width: 100%;
+  view {
+    flex: 1;
+    text-align: center;
+    .fa {
+      margin-right: 10rpx;
+    }
+  }
 }
 </style>

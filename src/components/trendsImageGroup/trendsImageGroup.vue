@@ -2,7 +2,11 @@
   <view>
     <!-- 一张图片 -->
     <view v-if="getLength === 1" class="one-image-box">
-      <image :src="imageList[0]" mode="aspectFill" />
+      <image
+        :src="imageDataList[0].imgUrl"
+        @tap="previewImage(0)"
+        mode="aspectFill"
+      />
     </view>
     <!-- 两张或四张图片 -->
     <view
@@ -10,19 +14,21 @@
       class="two-four-image-box"
     >
       <image
-        v-for="(item, index) in imageList"
+        v-for="(item, index) in imageDataList"
         :key="index"
-        :src="item"
+        :src="item.imgUrl"
         mode="aspectFill"
+        @tap="previewImage(index)"
       ></image>
     </view>
     <!-- 其他张数 -->
     <view v-else class="other-image-box"
       ><image
-        v-for="(item, index) in imageList"
+        v-for="(item, index) in imageDataList"
         :key="index"
-        :src="item"
+        :src="item.imgUrl"
         mode="aspectFill"
+        @tap="previewImage(index)"
       ></image
     ></view>
   </view>
@@ -32,18 +38,44 @@
 export default {
   name: "trendsImageGroup",
   props: {
-    imageList: Array,
+    imageDataList: Array, //图片信息对象
   },
   data() {
     return {};
   },
   created() {
-    // console.log(this.imageList);
+    // console.log(this.imageDataList);
   },
   computed: {
-	// 获取图片列表长度
+    // 获取图片列表长度
     getLength: function () {
-      return this.imageList.length;
+      return this.imageDataList.length;
+    },
+  },
+  methods: {
+    //预览图片
+    previewImage(index) {
+      let previewImageList = [];
+      let imageDataList = this.imageDataList;
+      for (const key in imageDataList) {
+        if (Object.hasOwnProperty.call(imageDataList, key)) {
+          const imgUrl = imageDataList[key].imgUrl;
+          previewImageList.push(imgUrl);
+        }
+      }
+      uni.previewImage({
+        current: index,
+        urls: previewImageList,
+        // longPressActions: {
+        //   itemList: ['发送给朋友', '保存图片', '收藏'],
+        //   success: function(data) {
+        //     console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+        //   },
+        //   fail: function(err) {
+        //     console.log(err.errMsg);
+        //   }
+        // }
+      });
     },
   },
 };
