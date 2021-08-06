@@ -564,7 +564,11 @@
             this.$forceUpdate();
         },
         onHide() {
-            wx.stopLocationUpdate();
+            wx.stopLocationUpdate({
+                fail: e => {
+                    // console.log(e)
+                }
+            });
         }
     }
 </script>
